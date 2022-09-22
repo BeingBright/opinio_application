@@ -36,7 +36,6 @@ ThemeData getTheme(Brightness brightness) {
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         splashColor: Colors.red,
-        
         iconSize: 25,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:opinio_application/component/post_card.dart';
+import 'package:opinio_application/component/post_view.dart';
 import 'package:opinio_application/model/post.dart';
 import 'package:opinio_application/service/auth_service.dart';
 import 'package:opinio_application/service/post_service.dart';
@@ -51,22 +52,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         icon: const Icon(Icons.speaker_notes_sharp),
         label: const Text("Post"),
       ),
-      child: posts.when(
-        error: (error, stackTrace) => Text(error.toString()),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        data: (data) {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: PostCard(post: data[index]),
-              );
-            },
-          );
-        },
-      ),
+      child: PostView()
     );
   }
 }

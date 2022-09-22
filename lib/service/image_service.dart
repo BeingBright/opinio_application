@@ -27,7 +27,6 @@ class ImageService with FirebaseDatabaseReference {
 
   Future<List<String>> uploadImage(List<Uint8List> images) async {
     var userID = FirebaseAuth.instance.currentUser?.uid ?? "";
-    var imageName = const Uuid().v4();
     List<String> imageNames = [];
     for (var bytes in images) {
       var name = const Uuid().v4();
@@ -43,7 +42,6 @@ class ImageService with FirebaseDatabaseReference {
           .child(userID)
           .child("$name.png")
           .getDownloadURL());
-      print(imageNames);
     }
 
     return imageNames;

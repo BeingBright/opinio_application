@@ -26,12 +26,27 @@ class PostService with FirebaseDatabaseReference {
 
   Stream<List<Post>> postStream() => _postsStore.snapshots().map(
         (event) => event.docs.map((e) {
-          return e.data();
+          var p = e.data();
+          p.id = e.id;
+          print(p);
+          return p;
         }).toList(),
       );
 
   void addPost(Post post) {
     post.by = FirebaseAuth.instance.currentUser!.uid;
+    _postsStore.add(post);
+  }
+
+  void updatePost(Post post, Map<String, dynamic> values) {
+    if (post.by != FirebaseAuth.instance.currentUser!.uid) return;
+    _postsStore.doc(post.id).update(
+          values,
+        );
+  }
+
+  void removePost(Post post) {
+    if (post.by != FirebaseAuth.instance.currentUser!.uid) return;
     _postsStore.add(post);
   }
 }

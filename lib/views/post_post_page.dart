@@ -35,7 +35,7 @@ class _PostPostPageState extends State<PostPostPage>
     });
 
     var paths = await ImageService().uploadImage(images);
-    if (paths != null && paths.isNotEmpty) _toPost.images = paths;
+    if (paths.isNotEmpty) _toPost.images = paths;
     PostService().addPost(_toPost);
     images = [];
     isUploading = false;
@@ -64,75 +64,82 @@ class _PostPostPageState extends State<PostPostPage>
           ),
         )
       ],
-      child: Center(
-        heightFactor: 0,
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Text(
-                    "Speak Up!",
-                    style: texttheme.displaySmall,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    autofocus: true,
-                    keyboardType: TextInputType.multiline,
-                    enableSuggestions: false,
-                    maxLines: 7,
-                    validator: requiredField,
-                    textInputAction: TextInputAction.done,
-                    onSaved: (newValue) {
-                      if (newValue == null) return;
-                      _toPost.content = newValue;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: "message",
-                      hintText: "What do YOU have to say?",
-                      alignLabelWithHint: true,
+      child: SingleChildScrollView(
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Center(
+            heightFactor: 1,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Text(
+                        "Speak Up!",
+                        style: texttheme.displaySmall,
+                      ),
                     ),
-                    onFieldSubmitted: (value) => _post()
-                        .then((value) => Navigator.of(context).pop(true)),
-                  ),
-                ),
-                GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: images.length + 1,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: (index >= images.length)
-                          ? UploadImageButton(
-                              onPressed: () {
-                                var f = ImageService().getRawImage();
-                                f.then((value) {
-                                  if (value == null) return;
-                                  if (!mounted) return;
-                                  setState(() {
-                                    images.add(value);
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: TextFormField(
+                        autofocus: true,
+                        keyboardType: TextInputType.multiline,
+                        enableSuggestions: false,
+                        maxLines: 7,
+                        validator: requiredField,
+                        textInputAction: TextInputAction.done,
+                        onSaved: (newValue) {
+                          if (newValue == null) return;
+                          _toPost.content = newValue;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: "message",
+                          hintText: "What do YOU have to say?",
+                          alignLabelWithHint: true,
+                        ),
+                        onFieldSubmitted: (value) => _post()
+                            .then((value) => Navigator.of(context).pop(true)),
+                      ),
+                    ),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: images.length + 1,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                      ),
+                      itemBuilder: (context, index) {
+                        return (index >= images.length)
+                            ? UploadImageButton(
+                                onPressed: () {
+                                  var f = ImageService().getRawImage();
+                                  f.then((value) {
+                                    if (value == null) return;
+                                    if (!mounted) return;
+                                    setState(() {
+                                      images.add(value);
+                                    });
                                   });
-                                });
-                              },
-                            )
-                          : Image.memory(
-                              fit: BoxFit.cover,
-                              images[index],
-                            ),
-                    );
-                    ;
-                  },
+                                },
+                              )
+                            : Image.memory(
+                                fit: BoxFit.cover,
+                                images[index],
+                              );
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

@@ -5,6 +5,7 @@ class Post {
   List images;
   String by;
   int likes;
+  int score;
   int dateAdded;
 
   Post.empty()
@@ -14,16 +15,10 @@ class Post {
         groups = [],
         images = [],
         by = "",
-        likes = 0;
-  Post(
-    this.id,
-    this.content,
-    this.groups,
-    this.images,
-    this.by,
-    this.likes,
-    this.dateAdded,
-  );
+        likes = 0,
+        score = 0;
+  Post(this.id, this.content, this.groups, this.images, this.by, this.likes,
+      this.dateAdded, this.score);
 
   static Post fromFire(MapEntry map) {
     var id = map.key;
@@ -33,7 +28,8 @@ class Post {
     var likes = map.value['likes'];
     var by = map.value['by'];
     var dateAdded = map.value['date_added'];
-    return Post(id, content, groups, images, by, likes, dateAdded);
+    var score = map.value['score'];
+    return Post(id, content, groups, images, by, likes, dateAdded, score);
   }
 
   Map<String, dynamic> toMap() {
@@ -60,5 +56,11 @@ class Post {
         dateAdded = json['date_added'] as int,
         likes = json['likes'] as int,
         images = json['images'] as List,
-        groups = [];
+        groups = [],
+        score = json['score'] as int;
+
+  @override
+  String toString() {
+    return "Post(id:$id, by:$by, dateAdded:$dateAdded)";
+  }
 }
