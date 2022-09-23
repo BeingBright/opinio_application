@@ -38,6 +38,7 @@ class Post {
       'by': by,
       'likes': likes,
       'date_added': DateTime.now().millisecondsSinceEpoch,
+      'score': score,
     };
   }
 
@@ -45,12 +46,13 @@ class Post {
         'content': content,
         'by': by,
         'likes': likes,
-        'date_added': dateAdded,
+        'date_added': DateTime.now().millisecondsSinceEpoch,
         'images': images,
+        'score': score,
       };
 
   Post.fromJson(Map<String, Object?> json)
-      : id = "json['id']" as String,
+      : id = "",
         content = json['content'] as String,
         by = json['by'] as String,
         dateAdded = json['date_added'] as int,

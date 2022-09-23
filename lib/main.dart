@@ -6,12 +6,14 @@ import 'package:opinio_application/configuration/app_scroll_behavior.dart';
 import 'package:opinio_application/configuration/theme.dart';
 import 'package:opinio_application/firebase_options.dart';
 import 'package:opinio_application/model/error.dart';
+import 'package:opinio_application/service/user_service.dart';
 import 'package:opinio_application/views/error_page.dart';
 import 'package:opinio_application/views/home_page.dart';
 import 'package:opinio_application/views/loading_page.dart';
 import 'package:opinio_application/views/login_page.dart';
 import 'package:opinio_application/views/post_post_page.dart';
 import 'package:opinio_application/views/register_page.dart';
+import 'package:opinio_application/views/user_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
               future: Future.wait(
                 [
                   Future.delayed(const Duration(seconds: 2)),
+                  UserService().loginUser()
                 ],
               ),
               builder: (context, snapshot) {
@@ -71,6 +74,7 @@ class MyApp extends StatelessWidget {
           "/home": (context) => const HomePage(),
           "/register": (context) => const RegisterPage(),
           "/post": (context) => const PostPostPage(),
+          "/profile": (context) => const UserProfilePage(),
         },
       ),
     );

@@ -20,6 +20,7 @@ class BasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return AuthorizationChecker(
       child: Scaffold(
         floatingActionButton: floatingAction,
@@ -31,18 +32,25 @@ class BasePage extends StatelessWidget {
               SafeArea(
                 child: Container(
                   constraints: BoxConstraints.tight(
-                    const Size(double.infinity, 50),
+                    const Size(double.infinity, 60),
                   ),
                   child: Row(
                     mainAxisAlignment: actionAlignment ?? MainAxisAlignment.end,
                     children: [
                       ...actions,
-                      IconButton(
-                        onPressed: () {
-                          (authService ?? AuthService()).logout();
-                        },
-                        icon: const Icon(
-                          Icons.logout_sharp,
+                      Container(
+                        color: Colors.black.withOpacity(0.5),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconButton(
+                            onPressed: () {
+                              (authService ?? AuthService()).logout();
+                            },
+                            icon: Icon(
+                              Icons.logout_sharp,
+                              color: theme.iconTheme.color,
+                            ),
+                          ),
                         ),
                       )
                     ],

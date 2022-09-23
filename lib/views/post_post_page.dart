@@ -38,7 +38,9 @@ class _PostPostPageState extends State<PostPostPage>
     if (paths.isNotEmpty) _toPost.images = paths;
     PostService().addPost(_toPost);
     images = [];
-    isUploading = false;
+    setState(() {
+      isUploading = false;
+    });
   }
 
   @override
@@ -50,17 +52,25 @@ class _PostPostPageState extends State<PostPostPage>
         onPressed: !isUploading
             ? () => _post().then((value) => Navigator.of(context).pop(true))
             : null,
-        icon: const Icon(Icons.speaker_notes_sharp),
+        icon: !isUploading
+            ? const Icon(Icons.speaker_notes_sharp)
+            : const CircularProgressIndicator(),
         label: const Text("Post your Opinio"),
         tooltip: "Share your Opinio to the world",
       ),
       actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new_sharp,
+        Container(
+          color: Colors.black.withOpacity(0.5),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_sharp,
+              ),
+            ),
           ),
         )
       ],

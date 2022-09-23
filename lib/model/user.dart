@@ -1,4 +1,6 @@
-class User {
+import 'package:opinio_application/model/user_registration_details.dart';
+
+class UserProfile {
   String name;
   String imageID;
   String wallpaper;
@@ -7,7 +9,7 @@ class User {
   List<String> likedPosts;
   List<String> gallery;
 
-  User.empty()
+  UserProfile.empty()
       : name = "",
         imageID = "",
         wallpaper = "",
@@ -16,7 +18,7 @@ class User {
         likedPosts = [],
         gallery = [];
 
-  User(
+  UserProfile(
     this.name,
     this.imageID,
     this.wallpaper,
@@ -32,7 +34,7 @@ class User {
         'wallpaper': wallpaper,
       };
 
-  User.fromJson(Map<String, dynamic> json)
+  UserProfile.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         imageID = json['imageID'],
         wallpaper = json['wallpaper'],
@@ -40,4 +42,13 @@ class User {
         blockedGroups = [],
         likedPosts = [],
         gallery = [];
+
+  UserProfile.fromCred(UserRegistrationDetails profile)
+      : name = profile.username,
+        imageID = "",
+        wallpaper = "",
+        favoriteGroups = [],
+        blockedGroups = [],
+        gallery = [],
+        likedPosts = [];
 }

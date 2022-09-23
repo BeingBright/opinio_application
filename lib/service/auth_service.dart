@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:opinio_application/model/user.dart';
 import 'package:opinio_application/model/user_login_details.dart';
 import 'package:opinio_application/model/user_registration_details.dart';
+import 'package:opinio_application/service/user_service.dart';
 
 class AuthService {
   static const AuthService _instance = AuthService._internal();
@@ -29,6 +31,8 @@ class AuthService {
         password: userLoginDetails.password,
       );
       await userCredentials.user?.updateDisplayName(userLoginDetails.username);
+
+      await UserService().addUser(UserProfile.fromCred(userLoginDetails));
 
       return userCredentials;
     } on FirebaseAuthException catch (e) {

@@ -24,14 +24,39 @@ class PostService with FirebaseDatabaseReference {
     }
   });
 
-  Stream<List<Post>> postStream() => _postsStore.snapshots().map(
-        (event) => event.docs.map((e) {
-          var p = e.data();
-          p.id = e.id;
-          print(p);
-          return p;
-        }).toList(),
-      );
+  Stream<List<Post>> postStream() =>
+      _postsStore.orderBy("date_added", descending: true).snapshots().map(
+            (event) => event.docs.map((e) {
+              var p = e.data();
+              p.id = e.id;
+              return p;
+            }).toList(),
+          );
+
+  late final postForUserProvider =
+      StreamProvider.family<List<Post>, String>((ref, user) async* {
+    await for (final val in postStreamForUser(user)) {
+      yield val;
+    }
+  });
+
+  Stream<List<Post>> postStreamForUser(String userID) {
+    var collection = FirebaseFirestore.instance
+        .collection('posts')
+        .where('by', isEqualTo: userID)
+        .withConverter(
+          fromFirestore: (snapshot, _) => Post.fromJson(snapshot.data()!),
+          toFirestore: (value, _) => value.toJson(),
+        );
+
+    return collection.orderBy("date_added", descending: true).snapshots().map(
+          (event) => event.docs.map((e) {
+            var p = e.data();
+            p.id = e.id;
+            return p;
+          }).toList(),
+        );
+  }
 
   void addPost(Post post) {
     post.by = FirebaseAuth.instance.currentUser!.uid;

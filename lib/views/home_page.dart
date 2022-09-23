@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:opinio_application/component/post_card.dart';
 import 'package:opinio_application/component/post_view.dart';
-import 'package:opinio_application/model/post.dart';
 import 'package:opinio_application/service/auth_service.dart';
-import 'package:opinio_application/service/post_service.dart';
+import 'package:opinio_application/service/user_service.dart';
 import 'package:opinio_application/views/base_page.dart';
 
-class HomePage extends ConsumerStatefulWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key, this.authService});
 
   final AuthService? authService;
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _HomePageState extends State<HomePage> {
   late AuthService authService;
 
   @override
@@ -32,15 +29,38 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List<Post>> posts = ref.watch(PostService().postProvider);
     return BasePage(
       actionAlignment: MainAxisAlignment.spaceBetween,
       actions: [
-        IconButton(
-          padding: const EdgeInsets.all(0),
-          onPressed: () {},
-          icon: const Icon(
-            Icons.person,
+        Container(
+          color: Colors.black.withOpacity(0.5),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Navigator.of(context).pushNamed("/profile");
+              },
+              icon: FutureBuilder(
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data?.imageID != null &&
+                        snapshot.data!.imageID.isNotEmpty) {
+                      return Hero(
+                        tag: snapshot.data!.imageID,
+                        child: Image.network(
+                          snapshot.data!.imageID,
+                        ),
+                      );
+                    } else {
+                      return const Icon(Icons.person);
+                    }
+                  }
+                  return const CircularProgressIndicator();
+                },
+                future: UserService().getUserProfile(),
+              ),
+            ),
           ),
         )
       ],
@@ -52,7 +72,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         icon: const Icon(Icons.speaker_notes_sharp),
         label: const Text("Post"),
       ),
-      child: PostView()
+      child: SingleChildScrollView(
+        child: Container(
+          constraints:
+              BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+          child: const PostView(),
+        ),
+      ),
     );
   }
 }
